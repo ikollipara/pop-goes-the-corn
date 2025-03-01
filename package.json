@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev": "rollup --config rollup.config.mjs -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "rollup": "^4.34.9"
+  }
+}
