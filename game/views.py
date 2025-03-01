@@ -7,13 +7,15 @@ from .models import User
 
 
 class HomeView(View):
-    def get(self):
+    def get(self, request):
         form = UserLoginForm()
-        return render(self.request, "game/login.html", {"form": form})
+        return render(request, "game/login.html", {"form": form})
 
-    def post(self):
-        form = UserLoginForm(self.request.POST, self.request.FILES)
-        user, _ = form.save()
+    def post(self, request):
+        form = UserLoginForm(request.POST, self.request.FILES)
+        if form.is_valid():
+            user, _ = form.save()
 
-        login(self.request, user)
-        return redirect("home")
+            response = redirect("home")
+            response.set_cookie("email", user.email)
+            return response
