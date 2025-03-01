@@ -37,7 +37,7 @@ class UserLoginForm(forms.ModelForm):
         email = self.cleaned_data["email"]
         print(email)
         if not (user := User.objects.filter(email=email).first()):
-            user, _ = User.objects.create(
+            user = User.objects.create(
                 email=email,
                 display_name=self.cleaned_data["display_name"],
             )
