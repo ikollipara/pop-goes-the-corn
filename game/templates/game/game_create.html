@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% load static %}
+<main class="w-screen px-5 py-3">
+    <h1 class="text-3xl text-red-700">Create a Game</h1>
+    <form class="flex flex-col mt-10" method="post">
+    {% csrf_token %}
+    {{form}}
+    <button class="bg-red-700 text-gray-100 rounded px-2 py-3 mt-5 w-full hover:cursor-pointer hover:bg-red-800 transition-colors" type="submit">Create Game</button>
+    </form>
+</main>
+{% endblock content %}

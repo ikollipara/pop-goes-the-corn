@@ -26,9 +26,14 @@ class Card(models.Model):
     def __str__(self):
         return self.name
 
+    def do_effect(self, game: "Game") -> str:
+        from game import effects
+
+        return effects.__dict__[self.effect](game)
+
 
 class Game(models.Model):
-    started_at = models.DateTimeField(auto_now_add=True)
+    started_at = models.DateTimeField(null=True, blank=True)
     finished_at = models.DateTimeField(null=True, blank=True)
     pops_left = models.IntegerField(default=0)
     until_next_pop = models.IntegerField(default=0)
@@ -53,7 +58,10 @@ class UserGame(models.Model):
     killed_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField()
     next_player: "models.OneToOneField[UserGame]" = models.OneToOneField(
-        "game.UserGame", on_delete=models.DO_NOTHING, related_name="prev_player"
+        "game.UserGame",
+        on_delete=models.DO_NOTHING,
+        related_name="prev_player",
+        null=True,
     )
 
     class Meta:

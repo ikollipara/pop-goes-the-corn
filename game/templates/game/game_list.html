@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<main class="w-screen px-5 py-3">
+    <h1 class="text-3xl text-red-700">Games</h1>
+    <a class="underline decoration-red-700 text-red-700 hover:decoration-red-900 hover:text-red-900" href="{% url 'create' %}">Create a game</a>
+    {% for game in games %}
+        <a href="{% url 'detail' game.pk %}">Game #{{ game.pk }}</a>
+    {% empty %}
+    <span>No games.</span>
+    {% endfor %}
+</main>
+{% endblock content %}
