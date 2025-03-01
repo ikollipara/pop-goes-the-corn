@@ -33,6 +33,10 @@ class Game(models.Model):
     pops_left = models.IntegerField(default=0)
     until_next_pop = models.IntegerField(default=0)
     last_card_played = models.IntegerField(default=None, null=True)
+    chance_to_draw = models.SmallIntegerField(
+        default=75,
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
 
     deck_cards: "RelatedManager[Deck]"
     players: "RelatedManager[UserGame]"
@@ -83,6 +87,7 @@ class DeckQuerySet(models.QuerySet["Deck"]):
 class Deck(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="deck_cards")
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    # is_drawn == is_played
     is_played = models.BooleanField(default=False)
     placement = models.PositiveSmallIntegerField()
 
@@ -90,6 +95,7 @@ class Deck(models.Model):
 
     class Meta:
         indexes = [models.Index(fields=["card", "game"])]
+
 
 
 class Hand(models.Model):
