@@ -16,6 +16,7 @@ import random
 
 def skip(game: Game) -> str:
     # ~50 rarity, medium rarity
+    # Pass the kernel
 
     player = game.players.filter(is_active=True, killed_at__isnull=True).get()
     player.is_active = False
@@ -27,32 +28,36 @@ def skip(game: Game) -> str:
     player.save()
     next_player.save()
 
-    return "Skipped Turn!"
+    return "You passed the Kernel!"
 
 
 def lucky_turn(game: Game) -> str:
     # ~50 rarity, medium rarity
+    # Pinch of lucky salt
 
     # Increases rarity of all cards 
     # i.e. higher chances of drawing a card in general, and rarier cards become even more common
     game.chance_to_draw = game.chance_to_draw + 5
 
-    return "You now have a Lucky Turn!"
+    return "You applied a pinch of salt and now have a Lucky Turn!"
 
 
 
 def super_lucky_turn(game: Game) -> str:
     # ~20, higher rarity
+    # Lucky Butter Waterfall
     
     # Like a lucky_turn but increases more
     game.chance_to_draw = 100
 
 
-    return "You now have a Super Lucky Turn!"
+    return "You applied an extraordinary amount of butter and now have a Super Lucky Turn!"
 
 
 def burnt_rough_estimator(game:Game) -> str:
     # ~ 80 
+    # 
+
 
     if game.chance_to_draw <= 10:
         return "Less than 10 clicks till the next burnt popcorn!"
@@ -89,6 +94,7 @@ def burnt_tracker(game: Game) -> str:
 
 def shuffle(game: Game) -> str:
     # ~20
+    # shake the kernels
     
     # set the numbers of pops from the number of active players - 1 till the amount of cards left in the deck
     game.until_next_pop = random.randint(
@@ -97,47 +103,49 @@ def shuffle(game: Game) -> str:
 
     game.save(update_fields=["until_next_pop"])
 
-    return "You have shuffled the burnt popcorn!"
+    return "You have shaked up the burnt popcorn!"
 
 
 def delay_the_burnt(game: Game) -> str:
     # ~20 high rarity
+    # open the door for a little 
     
     if Deck.objects.cards_left_for_game(game) > 5:
         game.until_next_pop += 5 
         game.save(update_fields=["until_next_pop"])
-        return "You have delayed the burn by 5!"
+        return "You have opened the mircowave door and delayed the burn by 5 clicks!"
     
     else:
-        return "Unable to delay the burn!!!"
+        return "Unable to open the mircowave door and unable delay the burn!!!"
     
 
 
 def extended_delay_the_burnt(game: Game) -> str:
     # ~10 super high rarity
+    # open the door for a long while 
     
     if Deck.objects.cards_left_for_game(game) > 20:
         game.until_next_pop += 20 
         game.save(update_fields=["until_next_pop"])
-        return "You have delayed the burn by 20!"
+        return "You have opened the mircowave door and delayed the burn by 20 clicks!"
     
     elif Deck.objects.cards_left_for_game(game) > 15:
         game.until_next_pop += 15
         game.save(update_fields=["until_next_pop"])
-        return "You have delayed the burn by 15!"
+        return "You have opened the mircowave door and delayed the burn by 15 clicks!"
     
     elif Deck.objects.cards_left_for_game(game) > 10:
         game.until_next_pop += 10
         game.save(update_fields=["until_next_pop"])
-        return "You have delayed the burn by 10!"
+        return "You have opened the mircowave door and delayed the burn by 10 clicks!"
 
     elif Deck.objects.cards_left_for_game(game) > 5:
         game.until_next_pop += 5
         game.save(update_fields=["until_next_pop"])
-        return "You have delayed the burn by 5!"
+        return "You have opened the mircowave door and delayed the burn by 5 clicks!"
     
     else:
-        return "Unable to delay the burn!!!"
+        return "Unable to open the mircowave door and unable delay the burn!!!"
 
 
 
