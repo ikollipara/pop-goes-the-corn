@@ -22,8 +22,3 @@ class UserLoginForm(forms.ModelForm):
             {"display_name": self.cleaned_data["display_name"]}, email=email
         )
         return user
-
-
-class LoginForm(forms.Form):
-    email = forms.EmailField()
-    display_name = forms.CharField(max_length=255)
