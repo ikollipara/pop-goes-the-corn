@@ -64,11 +64,29 @@ class UserGame(models.Model):
         self.save()
 
 
+class DeckQuerySet(models.QuerySet["Deck"]):
+    def for_game(self, game: Game):
+        return self.filter(game=game)
+
+    def cards_left_for_game(self, game: Game):
+        return self.filter(is_played=False, game=game).count()
+
+    def current_card(self, game: Game):
+        return self.filter(
+            is_played=False,
+            placement=models.Subquery(
+                Game.objects.filter(game=game).get().last_card_played
+            ),
+        ).get()
+
+
 class Deck(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="deck_cards")
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     is_played = models.BooleanField(default=False)
     placement = models.PositiveSmallIntegerField()
+
+    objects: DeckQuerySet = DeckQuerySet.as_manager()
 
     class Meta:
         indexes = [models.Index(fields=["card", "game"])]
