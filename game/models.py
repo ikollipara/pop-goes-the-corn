@@ -4,9 +4,14 @@ Ian Kollipara <ian.kollipara@cune.edu>
 2025-03-01
 """
 
+from typing import TYPE_CHECKING
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+
+if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
 
 
 class Card(models.Model):
@@ -29,6 +34,9 @@ class Game(models.Model):
     until_next_pop = models.IntegerField(default=0)
     last_card_played = models.IntegerField(default=None, null=True)
 
+    deck_cards: "RelatedManager[Deck]"
+    players: "RelatedManager[UserGame]"
+
 
 class User(models.Model):
     email = models.EmailField(unique=True)
@@ -39,6 +47,10 @@ class UserGame(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="games")
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="players")
     killed_at = models.DateTimeField(null=True, blank=True)
+    is_active = models.BooleanField()
+    next_player: "models.OneToOneField[UserGame]" = models.OneToOneField(
+        "game.UserGame", on_delete=models.DO_NOTHING, related_name="prev_player"
+    )
 
     class Meta:
         constraints = [
