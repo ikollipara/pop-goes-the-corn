@@ -1,24 +1,19 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.shortcuts import redirect, render
+from django.views import View
+
+from .forms import UserLoginForm
 from .models import User
-from .forms import LoginForm
 
 
-def home(request):
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data["email"]
-            display_name = form.cleaned_data["display_name"]
+class HomeView(View):
+    def get(self):
+        form = UserLoginForm()
+        return render(self.request, "game/login.html", {"form": form})
 
-            user = User.objects.filter(email=email).first()
-            if user:
-                login(request, user)
-            else:
-                user = User.objects.create(email=email, display_name=display_name)
-                login(request, user)
-            return redirect("home")
-    else:
-        form = LoginForm()
+    def post(self):
+        form = UserLoginForm(self.request.POST, self.request.FILES)
+        user, _ = form.save()
 
-    return render(request, "home.html", {"form": form})
+        login(self.request, user)
+        return redirect("home")
