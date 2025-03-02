@@ -13,7 +13,7 @@ Aaron Cumming
       "description": "Ends your turn without you having to press the kernel.",
       "rarity": 40,
       "effect": "skip",
-      "image": "",
+      "image": "skip.jpg",
     }
   },
   {
@@ -24,7 +24,7 @@ Aaron Cumming
       "description": "Applies salt that increases your chance to draw a card with every click.",
       "rarity": 70,
       "effect": "lucky_turn",
-      "image": "",
+      "image": "salt.jpg",
     }
   },
     {
@@ -35,7 +35,7 @@ Aaron Cumming
       "description": "Applies butter that guarantees that you can draw a card with every click.",
       "rarity": 20,
       "effect": "super_lucky_turn",
-      "image": "",
+      "image": "butter.jpg",
     }
   },
     {
@@ -46,7 +46,7 @@ Aaron Cumming
       "description": "Roughly estimates till when the next burnt popcorn is.",
       "rarity": 70,
       "effect": "burnt_rough_estimator",
-      "image": "",
+      "image": "estimator rough.jpg",
     }
   },
     {
@@ -57,7 +57,7 @@ Aaron Cumming
       "description": "Estimates till when the next burnt popcorn is.",
       "rarity": 30,
       "effect": "burnt_good_estimator",
-      "image": "",
+      "image": "estimator good.jpg",
     }
   },
     {
@@ -68,7 +68,7 @@ Aaron Cumming
       "description": "Gives you exactly how many clicks till the next burnt popcorn.",
       "rarity": 5,
       "effect": "burnt_tracker",
-      "image": "",
+      "image": "tracker.jpg",
     }
   },
     {
@@ -76,32 +76,32 @@ Aaron Cumming
     "pk": 7,
     "fields": {
       "name": "Shake the Kernels",
-      "description": "Shaked up the burnt popcorn",
+      "description": "Shakes and shuffles up the burnt popcorn",
       "rarity": 80,
       "effect": "shuffle",
-      "image": "",
+      "image": "shaking popcorn.jpg",
     }
   },
     {
     "model": "game.card",
     "pk": 8,
     "fields": {
-      "name": "",
-      "description": "",
+      "name": "Open the Door for a Little",
+      "description": "If possible, opens the mircowave door and delays the burn by 5 clicks",
       "rarity": 20,
       "effect": "delay_the_burnt",
-      "image": "",
+      "image": "mircowave door open a little.jpg",
     }
   },
     {
     "model": "game.card",
     "pk": 9,
     "fields": {
-      "name": "",
-      "description": "",
+      "name": "Open the Door for a Long While",
+      "description": "If possible, opens the mircowave door and delays the burn for up to 20 clicks",
       "rarity": 10,
       "effect": "extended_delay_the_burnt",
-      "image": "",
+      "image": "mircowave door open a long while.jpg",
     }
   },
 ]
