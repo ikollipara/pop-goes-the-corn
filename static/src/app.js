@@ -5,6 +5,9 @@
  * App Entrypoint
  *------------------------------------------------------------**/
 
+/**
+ * Class representing the game state.
+ */
 class GameState {
   #data;
   #websocket;
@@ -12,6 +15,11 @@ class GameState {
   #currentPlayer;
   #player;
 
+  /**
+   * Create a game state.
+   * @param {Object} data - The initial game data.
+   * @param {string} player - The player associated with this instance.
+   */
   constructor(data, player) {
     this.#data = data;
     this.#player = player;
@@ -22,19 +30,31 @@ class GameState {
     this.#hideStartBtnIfNotCreator();
   }
 
+  /**
+   * Send a "join" message to the server with the player's email.
+   */
   join() {
     this.#websocket.send(JSON.stringify({ type: "join", email: this.#player }));
   }
 
+  /**
+   * Send a "start" message to the server to start the game.
+   */
   start() {
     this.#websocket.send(JSON.stringify({ type: "start" }));
   }
 
+  /**
+   * Send a "click" message to the server if the current player is the active player.
+   */
   click() {
     if (this.#gameData.active_player !== this.#player) return;
     this.#websocket.send(JSON.stringify({ type: "click" }));
   }
 
+  /**
+   * Start a synchronization interval to send the current game state to the server every second.
+   */
   startSync() {
     this.intervalFunc = setInterval(() => {
       this.#websocket.send(
@@ -47,10 +67,16 @@ class GameState {
     }, 1000);
   }
 
+  /**
+   * Stop the synchronization interval.
+   */
   stopSync() {
     clearInterval(this.intervalFunc);
   }
 
+  /**
+   * Send an "end_turn" message to the server to end the current player's turn.
+   */
   endTurn() {
     this.#websocket.send(
       JSON.stringify({
@@ -61,6 +87,10 @@ class GameState {
     );
   }
 
+  /**
+   * Send a "play_card" message to the server with the specified card.
+   * @param {Object} card - The card to be played.
+   */
   playCard(card) {
     this.#websocket.send(
       JSON.stringify({
@@ -71,6 +101,10 @@ class GameState {
     );
   }
 
+  /**
+   * Set up the WebSocket message event handler to process incoming messages and update the game state accordingly.
+   * @private
+   */
   #setupHandler() {
     this.#websocket.addEventListener("message", (ev) => {
       const data = JSON.parse(ev.data);
@@ -142,6 +176,10 @@ class GameState {
     });
   }
 
+  /**
+   * Send a "join" message when the WebSocket connection is opened if the player is not the game creator.
+   * @private
+   */
   #joinOnOpen() {
     this.#websocket.addEventListener("open", () => {
       if (this.#player !== this.#data.creator) {
@@ -150,6 +188,10 @@ class GameState {
     });
   }
 
+  /**
+   * Hide the start button if the player is not the game creator.
+   * @private
+   */
   #hideStartBtnIfNotCreator() {
     if (this.#player !== this.#data.creator) {
       document.querySelector("[data-game-start-btn]").remove();
@@ -157,6 +199,9 @@ class GameState {
   }
 }
 
+/**
+ * Initialize the game state when the DOM content is loaded, set up the WebSocket connection, and bind game actions to the global `window` object for easy access.
+ */
 document.addEventListener("DOMContentLoaded", () => {
   const el = document.querySelector("[data-game-ws]");
   if (el === null) return;
@@ -174,11 +219,19 @@ document.addEventListener("DOMContentLoaded", () => {
   window.cornClick = () => gameState.click();
 });
 
+/**
+ * Create a popcorn explosion at the click location.
+ * @param {Event} event - The click event.
+ */
 function popcornExplosion(event) {
-  // Call createPopcorn to create popcorn at click location
   createPopcorn(event.clientX, event.clientY);
 }
 
+/**
+ * Create a popcorn image at the specified coordinates and animate it.
+ * @param {number} x - The x-coordinate of the click.
+ * @param {number} y - The y-coordinate of the click.
+ */
 function createPopcorn(x, y) {
   const popcorn = document.createElement("img");
   const popcornNumber = Math.floor(Math.random() * 10); // Random popcorn image (0-9)
@@ -205,49 +258,6 @@ function createPopcorn(x, y) {
   // Remove the popcorn after the animation completes
   setTimeout(() => popcorn.remove(), 1500);
 }
-// document.addEventListener("DOMContentLoaded", () => {
-//   const el = document.querySelector("[data-game-ws]");
-//   if (el === null) return;
-
-//   const data = JSON.parse(document.querySelector("#ws_data").textContent);
-
-//   const url = new URL(`ws://${document.location.host}${data.ws}/`);
-//   const ws = new WebSocket(url);
-//   const players = [];
-//   let currentPlayer = null;
-//   let game;
-//   document.querySelectorAll("[data-game-player-id]").forEach((el) => {
-//     players.push(el.dataset.gamePlayerId);
-//     if (el.dataset.gamePlayer) currentPlayer = el.dataset.gamePlayerId;
-//   });
-
-//   const startBtn = document.querySelector("[data-game-start-btn]");
-//   if (currentPlayer != data.creator) startBtn.disabled = true;
-//   startBtn.onclick = () => {
-//     ws.send(JSON.stringify({ name: "start_game" }));
-//     setInterval(() => {
-//       ws.send(JSON.stringify({ type: "status" }));
-//     }, 1000);
-//     startBtn.remove();
-//   };
-
-//   ws.onopen = (ev) => {
-//     console.log(currentPlayer, data.creator);
-//     if (currentPlayer !== data.creator)
-//       ws.send(JSON.stringify({ type: "join", email: currentPlayer }));
-//   };
-
-//   ws.onmessage = (ev) => {
-//     const data = JSON.parse(ev.data);
-//     if (data.type == "start") {
-//       game = data.game;
-//       console.log(game);
-//     } else if (data.type == "status") {
-//       game = data.game;
-//       console.log(game);
-//     } else if
-//   };
-// });
 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("starfield");

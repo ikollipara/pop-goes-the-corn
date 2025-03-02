@@ -12,6 +12,7 @@ from game.models import Deck, Game, User
 
 
 class UserLoginForm(forms.ModelForm):
+    '''Form for logging in a user'''
     email = forms.EmailField(
         widget=forms.EmailInput(
             {
@@ -34,6 +35,7 @@ class UserLoginForm(forms.ModelForm):
         }
 
     def save(self, *args, **kwargs):
+        '''Save the user to the database and return the user''' 
         user, _ = User.objects.get_or_create(**self.cleaned_data)
         return user
 
@@ -44,6 +46,7 @@ class LoginForm(forms.Form):
 
 
 class GameForm(forms.ModelForm):
+    '''Form for creating a game'''
     deck_size = forms.IntegerField(
         label="Deck Size",
         max_value=1_000,
@@ -66,6 +69,7 @@ class GameForm(forms.ModelForm):
         self.request = request
 
     def save(self, *args, **kwargs):
+        '''Create a game with the current user and a deck of the given size'''
         game = Game.objects.create_with_player(self.request.game_user)
         Deck.objects.create_for_game(game, self.cleaned_data["deck_size"])
 
