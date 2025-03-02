@@ -17,4 +17,28 @@
             type="submit">Login/Create Account</button>
     </form>
 </main>
+
+<script>
+  function createUFO() {
+    const ufo = document.createElement("div");
+    ufo.classList.add("ufo");
+
+    
+    const startY = Math.random() * window.innerHeight * 0.8;
+    ufo.style.top = `${startY}px`;
+
+    document.body.appendChild(ufo);
+
+    
+    ufo.addEventListener('animationend', () => {
+      ufo.remove();
+    });
+  }
+
+  
+  setInterval(createUFO, 20000);
+
+ 
+  createUFO();
+</script>
 {% endblock content %}
