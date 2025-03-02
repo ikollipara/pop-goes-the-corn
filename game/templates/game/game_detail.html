@@ -37,16 +37,16 @@
 {% block content %}
 {{ data|json_script:"ws_data" }}
 <div data-game-ws></div>
+{% include "header.html" %}
 {% load static %}
 <main class="w-screen px-5 py-3 text-center">
-    <h1 class="text-3xl text-red-700">Don't Burn the Popcorn!</h1>
 
     <!-- Display Alive Users -->
     <div class="flex justify-center my-4">
         <h2 class="text-2xl font-bold">Alive Players:</h2>
         <ul class="ml-4">
             {% for usergame in alive_users %}
-                <li class="text-lg text-green-600">{{ usergame.user.display_name }}</li>
+                <li class="text-lg text-emerald-600">{{ usergame.user.display_name }}</li>
             <!--If ther is the only 1 alive_users, then is the winner, (besides when waiting for people to join)-->
             {% endfor %}
         </ul>
@@ -55,9 +55,9 @@
         <br></br> <!--Adds some white space-->
     </div>
 
-    <!-- Red Button to End Turn -->
+    <!-- emerald Button to End Turn -->
     <button id="end-turn-btn" 
-        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 active:bg-red-800 transition-all duration-150" 
+        class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-150" 
             onclick="endTurn()">End Turn</button>
 
             <div class="mt-2 mb-2 ml-2 mr-2 p-2">
