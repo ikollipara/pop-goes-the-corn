@@ -51,16 +51,17 @@ class LoginForm(forms.Form):
 
 class GameForm(forms.ModelForm):
     deck_size = forms.IntegerField(
+        label="Deck Size",
         max_value=1_000,
         min_value=100,
         required=True,
         widget=forms.NumberInput(
-            {
-                "class": "border border-gray-800 w-full rounded px-2",
-                "value": 500,
-            }
-        ),
-    )
+        {
+            "class": "border border-gray-800 w-full rounded px-2 py-1 bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500",
+            "value": 500,
+        }
+    ),
+)
 
     class Meta:
         model = Game
