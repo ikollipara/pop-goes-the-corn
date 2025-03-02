@@ -266,9 +266,10 @@ class DeckQuerySet(models.QuerySet["Deck"]):
     def create_for_game(self, game: Game, size: int):
         """Create a deck for the given game with the given size."""
 
-        for i in range(1, size + 1):
-            card = Card.objects.get_random_card()
-            self.create(game=game, card=card, placement=i)
+        if Card.objects.count() > 1:
+            for i in range(1, size + 1):
+                card = Card.objects.get_random_card()
+                self.create(game=game, card=card, placement=i)
 
     def for_game(self, game: Game):
         """Filter to only include those with the given game."""
