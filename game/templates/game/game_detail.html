@@ -54,7 +54,18 @@
     <div class="mt-2 mb-2 ml-2 mr-2 p-2">
         <br></br> <!--Adds some white space-->
     </div>
-    <img class="mx-auto m-5 w-52 hover:animate-pulse active:scale-95 transition-transform duration-100"
+
+    <!-- Red Button to End Turn -->
+    <button id="end-turn-btn" 
+        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 active:bg-red-800 transition-all duration-150" 
+            onclick="endTurn()">End Turn</button>
+
+            <div class="mt-2 mb-2 ml-2 mr-2 p-2">
+                <br></br> <!--Adds some white space-->
+            </div>
+            
+    <!-- Big Corn -->
+    <img class="mx-auto m-5 w-52 hover:animate-pulse active:scale-95 transition-transform duration-100" 
     src="{% static 'corn-kernel.png' %}" alt="" onclick="popcornExplosion(event)">
 
 
@@ -77,7 +88,9 @@
             popcorn.src = `/static/popcorn_kernel_${popcornNumber}.png`;
 
             popcorn.classList.add("popcorn");
-            document.body.appendChild(popcorn);
+
+            const main = document.querySelector("main")
+            main.appendChild(popcorn);
 
             // Get screen position of the click event
             const xPos = x; // x position is directly from the click
