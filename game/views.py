@@ -50,6 +50,7 @@ class HomeView(FormView):
     """
 
     form_class = UserLoginForm
+    template_name = "game/login.html"
 
     def form_valid(self, form):
         user = form.save()
