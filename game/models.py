@@ -52,6 +52,12 @@ class User(models.Model):
     display_name = models.CharField(max_length=255)
 
 
+class UserGameQuerySet(models.QuerySet):
+    def alive(self):
+        return self.filter(killed_at__isnull=True)
+
+
+
 class UserGame(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="games")
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="players")
@@ -63,6 +69,8 @@ class UserGame(models.Model):
         related_name="prev_player",
         null=True,
     )
+
+    objects = UserGameQuerySet.as_manager()
 
     class Meta:
         constraints = [

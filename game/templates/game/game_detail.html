@@ -1,7 +1,105 @@
 {% extends "base.html" %}
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popcorn Explosion</title>
+    <style>
+        @keyframes popcornArc {
+            0% {
+                transform: translate(0, 0) scale(0.3);
+                opacity: 1;
+            }
+            30% {
+                transform: translate(var(--x), -100px) scale(0.3); /* Rise up */
+            }
+            100% {
+                transform: translate(calc(var(--x) * 2), 500px) scale(0.2); /* Fall down and shrink */
+                opacity: 0;
+            }
+        }
+    
+        .popcorn {
+            position: absolute;
+            width: 20px;  
+            height: 20px;  
+            pointer-events: none;
+            animation: popcornArc 1.5s ease-out forwards;
+        }
+    </style>
+    
+</head>
+
+
+
+
+
 {% block content %}
-{% comment %} List of Players {% endcomment %}
+{% load static %}
+<main class="w-screen px-5 py-3 text-center">
+    <h1 class="text-3xl text-red-700">Don't Burn the Popcorn!</h1>
+
+    <!-- Display Alive Users -->
+    <div class="flex justify-center my-4">
+        <h2 class="text-2xl font-bold">Alive Players:</h2>
+        <ul class="ml-4">
+            {% for usergame in alive_users %}
+                <li class="text-lg text-green-600">{{ usergame.user.display_name }}</li>
+            <!--If ther is the only 1 alive_users, then is the winner, (besides when waiting for people to join)-->
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mt-2 mb-2 ml-2 mr-2 p-2">
+        <br></br> <!--Adds some white space-->
+    </div>
+    <img class="mx-auto m-5 w-52 hover:animate-pulse active:scale-95 transition-transform duration-100" 
+    src="{% static 'corn-kernel.png' %}" alt="" onclick="popcornExplosion(event)">
+
+
+
+
+
+
+
+
+
+    <script>
+        function popcornExplosion(event) {
+            // Call createPopcorn to create popcorn at click location
+            createPopcorn(event.clientX, event.clientY);
+        }
+    
+        function createPopcorn(x, y) {
+            const popcorn = document.createElement("img");
+            const popcornNumber = Math.floor(Math.random() * 10); // Random popcorn image (0-9)
+            popcorn.src = `/static/popcorn_kernel_${popcornNumber}.png`;
+    
+            popcorn.classList.add("popcorn");
+            document.body.appendChild(popcorn);
+    
+            // Get screen position of the click event
+            const xPos = x; // x position is directly from the click
+            const yPos = y; // y position is directly from the click
+    
+            popcorn.style.left = `${xPos}px`;  // Set left position based on the click
+            popcorn.style.top = `${yPos}px`;   // Set top position based on the click
+    
+            // Randomly choose to move left or right (xOffset)
+            const xOffset = (Math.random() - 0.5) * 100;  // Random small left or right offset
+    
+            // Apply the random xOffset to the custom property
+            popcorn.style.setProperty('--x', `${xOffset}px`);
+    
+            // Remove the popcorn after the animation completes
+            setTimeout(() => popcorn.remove(), 1500);
+        }
+    </script>
+    </main>
+</main>
+
+
+
+
 {% comment %} Corn Kernel {% endcomment %}
 {% comment %} Action List {% endcomment %}
 {% comment %} Card List {% endcomment %}

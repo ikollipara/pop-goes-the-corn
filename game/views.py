@@ -8,6 +8,8 @@ from django.views.generic import CreateView, DetailView, ListView
 from .forms import GameForm, UserLoginForm
 from .models import Game, User
 
+import random
+
 
 def authed(view):
     def inner(request, *args, **kwargs):
@@ -86,4 +88,7 @@ class GameDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["alive_users"] = self.object.players.alive()
         return context
+    
+
