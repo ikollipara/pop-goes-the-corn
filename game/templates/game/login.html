@@ -5,7 +5,7 @@
 {% load static %}
 <main class="h-screen w-screen grid place-content-center">
     <img class="mx-auto animate-bounce m-5 w-52" src="{% static 'corn-kernel.png' %}" alt="">
-    <h1 class="text-9xl text-red-700">Don't Burn The Popcorn!</h1>
+    <h1 class="text-9xl text-emerald-700">Don't Burn The Popcorn!</h1>
     <form class="flex flex-col mt-10" method="post">
         <div class="flex mb-5 gap-x-3">
             {% csrf_token %}
@@ -13,7 +13,7 @@
             {{form.display_name}}
         </div>
         <button
-            class="bg-red-700 text-gray-100 rounded px-2 py-3 w-full hover:cursor-pointer hover:bg-red-800 transition-colors"
+            class="bg-emerald-700 text-gray-100 rounded px-2 py-3 w-full hover:cursor-pointer hover:bg-emerald-800 transition-colors"
             type="submit">Login/Create Account</button>
     </form>
 </main>

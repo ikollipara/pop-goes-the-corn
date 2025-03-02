@@ -3,7 +3,7 @@
 {% block content %}
 {% include "header.html" %}
 {% load static %}
-<main class="w-screen flex flex-col items-center pt-10">
+<main class="w-screen flex flex-col items-center pt-10 pb-10">
     <h1 class="text-9xl text-emerald-700">Games</h1>
     <a class="bg-emerald-700 text-gray-100 rounded px-2 py-3 w-1/2 hover:cursor-pointer hover:bg-emerald-800 transition-colors text-center mt-10 text-2xl"
         href="{% url 'create' %}">Create a game</a>
@@ -20,7 +20,7 @@
                 <td class="px-4 py-2">
                     <a class="underline text-white hover:text-emerald-700" href="{% url 'detail' game.pk %}">Game #{{ game.pk }}</a>
                 </td>
-                <td class="px-4 py-2">placeholder #</td>
+                <td class="px-4 py-2">{{game.player_count}}</td>
             </tr>
             {% empty %}
             <tr>
