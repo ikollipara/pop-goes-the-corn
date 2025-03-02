@@ -8,7 +8,7 @@ Forms Baby :)
 
 from django import forms
 
-from game.models import Game, User, UserGame
+from game.models import Deck, Game, User
 
 
 class UserLoginForm(forms.ModelForm):
@@ -34,13 +34,7 @@ class UserLoginForm(forms.ModelForm):
         }
 
     def save(self, *args, **kwargs):
-        email = self.cleaned_data["email"]
-        print(email)
-        if not (user := User.objects.filter(email=email).first()):
-            user = User.objects.create(
-                email=email,
-                display_name=self.cleaned_data["display_name"],
-            )
+        user, _ = User.objects.get_or_create(**self.cleaned_data)
         return user
 
 
@@ -56,12 +50,12 @@ class GameForm(forms.ModelForm):
         min_value=100,
         required=True,
         widget=forms.NumberInput(
-        {
-            "class": "border border-gray-800 w-full rounded px-2 py-1 bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500",
-            "value": 500,
-        }
-    ),
-)
+            {
+                "class": "border border-gray-800 w-full rounded px-2 py-1 bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500",
+                "value": 500,
+            }
+        ),
+    )
 
     class Meta:
         model = Game
@@ -72,12 +66,7 @@ class GameForm(forms.ModelForm):
         self.request = request
 
     def save(self, *args, **kwargs):
-        game = Game.objects.create()
-
-        # Creating the deck
-
-        game.players.create(
-            user=self.request.game_user, is_active=False, next_player=None
-        )
+        game = Game.objects.create_with_player(self.request.game_user)
+        Deck.objects.create_for_game(game, self.cleaned_data["deck_size"])
 
         return game

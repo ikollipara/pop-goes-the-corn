@@ -1,34 +1,40 @@
-from django.contrib.auth import login
-from django.http import HttpRequest
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import CreateView, DetailView, ListView
+"""
+views.py
+Ian Kollipara <ian.kollipara@cune.edu>
+2025-03-01
 
-from .forms import GameForm, UserLoginForm
-from .models import Game, User
+Views
+"""
 
 import random
 
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, FormView, ListView
+
+from game.forms import GameForm, UserLoginForm
+from game.models import Game, User
+
 
 def authed(view):
+    """Make the given view only available to authed users."""
+
     def inner(request, *args, **kwargs):
         if not request.COOKIES.get("email"):
             return redirect("home")
 
-        request.game_user = User.objects.filter(email=request.COOKIES["email"]).get()
-        print(request, view.__name__)
+        request.game_user = User.objects.get_by_email(request.COOKIES["email"])
         return view(request, *args, **kwargs)
 
     return inner
 
 
 def guest(view):
+    """Make the given view only available to guest users (not authed)."""
+
     def inner(request, *args, **kwargs):
         if request.COOKIES.get("email"):
-            request.game_user = User.objects.filter(
-                email=request.COOKIES["email"]
-            ).get()
+            request.game_user = User.objects.get_by_email(request.COOKIES["email"])
             return redirect("lobby")
 
         return view(request, *args, **kwargs)
@@ -36,52 +42,66 @@ def guest(view):
     return inner
 
 
-class HomeView(View):
-    def get(self, request):
-        form = UserLoginForm()
-        return render(request, "game/login.html", {"form": form})
+class HomeView(FormView):
+    """
+    # Homepage view.
 
-    def post(self, request):
-        form = UserLoginForm(request.POST, self.request.FILES)
-        print(form)
-        if form.is_valid():
-            user = form.save()
+    The homepage includes form for either logging in or creating an account.
+    """
 
-            response = redirect("lobby")
-            response.set_cookie("email", user.email)
-            return response
+    form_class = UserLoginForm
 
-        return render(request, "game/login.html", {"form": form})
+    def form_valid(self, form):
+        user = form.save()
+
+        response = redirect("lobby")
+        response.set_cookie("email", user.email)
+        return response
 
 
 class GameLobbyListView(ListView):
+    """
+    # GameLobbyListView
+
+    The list of active game lobbies.
+    The only ones shown are the games that are not started.
+    """
+
     model = Game
     template_name = "game/game_list.html"
     context_object_name = "games"
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(started_at__isnull=True)
+    queryset = Game.objects.not_started().with_player_count()
 
 
 class GameCreateView(CreateView):
+    """
+    # GameCreateView.
+
+    The view for creating a game.
+    This view is quite short, and uses a custom
+    form with an overriden save method.
+    """
+
     model = Game
     form_class = GameForm
     template_name = "game/game_create.html"
+    success_url = reverse_lazy("lobby")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
-    def form_valid(self, form):
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy("lobby")
-
 
 class GameDetailView(DetailView):
+    """
+    # GameDetailView.
+
+    The main view of the application, this view is
+    short since most of the data is passed through
+    the websocket connection.
+    """
+
     model = Game
     template_name = "game/game_detail.html"
     context_object_name = "game"
@@ -89,6 +109,11 @@ class GameDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["alive_users"] = self.object.players.alive()
-        return context
-    
 
+        # This is the collection of initial data
+        # used to setup the websocket connection.
+        context["data"] = {
+            "ws": f"/ws/game/{self.get_object().pk}",
+        }
+
+        return context
