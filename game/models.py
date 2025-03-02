@@ -78,7 +78,7 @@ class GameQuerySet(models.QuerySet["Game"]):
         """Create a game with the given user as the first player."""
 
         game = self.create()
-        game.players.create(user=user, is_active=False, next_player=None)
+        game.players.create(user=user, is_active=True, next_player=None)
 
         return game
 
@@ -116,25 +116,32 @@ class Game(models.Model):
             "until_next_pop": self.until_next_pop,
             "last_card_played": self.last_card_played,
             "chance_to_draw": self.chance_to_draw,
+            "active_player": self.players.filter(is_active=True).get().user.email,
+            "players": [p.user.email for p in self.players.iterator()],
         }
 
-    @atomic
     def join(self, email: str):
         """Have a player with the given email join the game."""
-        last_player = UserGame.objects.get_last_player_for_game(self)
-        player = self.players.create(user=User.objects.get_by_email(email))
+        last_player = UserGame.objects.get_last_player_for_game(self).get()
+        player = self.players.create(
+            user=User.objects.get_by_email(email), is_active=False
+        )
         last_player.next_player = player
-        last_player.save()
+        last_player.save(update_fields=["next_player"])
 
     @atomic
     def start(self):
-        """Start a nnew game."""
+        """Start a new game."""
 
         # This will close the loop for the players so we have an actual circle
+        self.until_next_pop = random.randint(1, 100)
+        self.pops_left = self.players.count() - 1
         last_player = UserGame.objects.get_last_player_for_game(self).get()
         first_player = UserGame.objects.is_active_for_game(self).get()
         last_player.next_player = first_player
+        self.started_at = timezone.now()
         last_player.save()
+        self.save(update_fields=["started_at", "until_next_pop", "pops_left"])
 
     @atomic
     def click(self) -> bool:
@@ -150,12 +157,15 @@ class Game(models.Model):
         return popped
 
     @atomic
-    def advance_turn(self):
+    def advance_turn(self, email: str):
         """Advance the game to the start of the next player's turn."""
 
-        UserGame.objects.is_active_for_game(self).update(
-            next_player__is_active=True, is_active=False
-        )
+        current_player = UserGame.objects.for_game(self).for_user(email).get()
+        current_player.next_player.is_active = True
+        current_player.is_active = False
+        current_player.save(update_fields=["is_active"])
+        current_player.next_player.save(update_fields=["is_active"])
+        self.save()
 
 
 class UserQuerySet(models.QuerySet["User"]):

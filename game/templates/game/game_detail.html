@@ -35,85 +35,32 @@
 
 
 {% block content %}
-{{ data|json_script:"ws_data" }}
-<div data-game-ws></div>
 {% include "header.html" %}
+{{ data|json_script:"ws_data" }}
 {% load static %}
-<main class="w-screen px-5 py-3 text-center">
+<main data-game-ws class="w-screen px-5 py-3 text-center">
+    <div data-game-players class="grid gap-x-3 my-4">
+        {% include "alive.html" %}
+    </div>
 
-    <!-- Button to Return to Lobby in the Top-Left Corner -->
-    <a href="{% url 'lobby' %}" class="fixed top-4 left-4 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-150">
-        Return to Game Lobby
-    </a>
-    
-    <!-- Display Alive Users -->
-    <div class="flex justify-center my-4">
-        <h2 class="text-2xl font-bold">Alive Players:</h2>
-        <ul class="ml-4">
-            {% for usergame in alive_users %}
-                <li class="text-lg text-emerald-600">{{ usergame.user.display_name }}</li>
-            <!--If ther is the only 1 alive_users, then is the winner, (besides when waiting for people to join)-->
-            {% endfor %}
-        </ul>
+    <div class="mt-2 mb-2 ml-2 mr-2 p-2">
+        <br></br> <!--Adds some white space-->
     </div>
 
     <!-- emerald Button to End Turn -->
-    <button id="end-turn-btn" 
-        class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-150" 
+    <button data-game-start-btn onclick="startGame(); this.remove(); document.querySelector('#end-turn').hidden = false;" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-150">Start Game</button>
+    <button id="end-turn" hidden class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 active:bg-emerald-800 transition-all duration-150"
             onclick="endTurn()">End Turn</button>
+    <div class="mt-1 mb-1 ml-2 mr-2 p-1">
+        <br></br> <!--Adds some white space-->
+    </div>
 
-            <div class="mt-1 mb-1 ml-2 mr-2 p-1">
-                <br></br> <!--Adds some white space-->
-            </div>
-
-        
-    
-            
     <!-- Big Corn -->
-    <img class="mx-auto m-5 w-52 hover:animate-pulse active:scale-95 transition-transform duration-100" 
-    src="{% static 'corn-kernel.png' %}" alt="" onclick="popcornExplosion(event)">
+    <img class="mx-auto m-5 w-52 hover:animate-pulse active:scale-95 transition-transform duration-100"
+    src="{% static 'corn-kernel.png' %}" alt="" onclick="cornClick()">
 
-
-
-
-
-
-
-
-
-    <script>
-        function popcornExplosion(event) {
-            // Call createPopcorn to create popcorn at click location
-            createPopcorn(event.clientX, event.clientY);
-        }
-
-        function createPopcorn(x, y) {
-            const popcorn = document.createElement("img");
-            const popcornNumber = Math.floor(Math.random() * 10); // Random popcorn image (0-9)
-            popcorn.src = `/static/popcorn_kernel_${popcornNumber}.png`;
-
-            popcorn.classList.add("popcorn");
-
-            const main = document.querySelector("main")
-            main.appendChild(popcorn);
-
-            // Get screen position of the click event
-            const xPos = x; // x position is directly from the click
-            const yPos = y; // y position is directly from the click
-
-            popcorn.style.left = `${xPos}px`;  // Set left position based on the click
-            popcorn.style.top = `${yPos}px`;   // Set top position based on the click
-
-            // Randomly choose to move left or right (xOffset)
-            const xOffset = (Math.random() - 0.5) * 100;  // Random small left or right offset
-
-            // Apply the random xOffset to the custom property
-            popcorn.style.setProperty('--x', `${xOffset}px`);
-
-            // Remove the popcorn after the animation completes
-            setTimeout(() => popcorn.remove(), 1500);
-        }
-    </script>
+    <!-- Hand -->
+    <div class="grid gap-x-3 my-4" data-game-hand-contents></div>
     </main>
 </main>
 

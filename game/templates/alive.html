@@ -1,0 +1,5 @@
+{% for usergame in alive_users %}
+    <div {% if data.creator == data.player %}data-game-current-player{% endif %} class="{% if usergame.killed_at %}bg-red-600 ring-red-800{% else %}bg-emerald-600 ring-emerald-800{% endif %} ring-2  text-gray-100 py-3 px-2">
+        {{ usergame.user.display_name }}
+    </div>
+{% endfor %}

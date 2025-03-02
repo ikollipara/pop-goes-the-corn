@@ -13,7 +13,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView
 
 from game.forms import GameForm, UserLoginForm
-from game.models import Game, User
+from game.models import Game, User, UserGame
 
 
 def authed(view):
@@ -115,6 +115,10 @@ class GameDetailView(DetailView):
         # used to setup the websocket connection.
         context["data"] = {
             "ws": f"/ws/game/{self.get_object().pk}",
+            "creator": UserGame.objects.is_active_for_game(self.get_object())
+            .get()
+            .user.email,
+            "player": self.request.game_user.email,
         }
 
         return context
