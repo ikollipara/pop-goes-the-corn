@@ -17,9 +17,9 @@ from game.models import Card, Deck, Game, Hand, UserGame
 
 @dataclass(frozen=True)
 class Status:
-    type: Literal["status"] = "status"
     game: dict[str, str]
     active_email: str
+    type: Literal["status"] = "status"
 
     def to_dict(self):
         return {"type": self.type, "game": self.game, "active_email": self.active_email}
@@ -27,9 +27,9 @@ class Status:
 
 @dataclass(frozen=True)
 class Start:
-    type: Literal["start"] = "start"
     game: dict[str, str]
     active_email: str
+    type: Literal["start"] = "start"
 
     def to_dict(self):
         return {"type": self.type, "game": self.game, "active_email": self.active_email}
@@ -37,10 +37,10 @@ class Start:
 
 @dataclass(frozen=True)
 class CardResolved:
-    type: Literal["card_resolved"] = "card_resolved"
     game: dict[str, str]
     active_email: str
     msg: str = ""
+    type: Literal["card_resolved"] = "card_resolved"
 
     def to_dict(self):
         return {
@@ -53,8 +53,8 @@ class CardResolved:
 
 @dataclass(frozen=True)
 class Ok:
-    type: Literal["ok"] = "ok"
     msg: str = ""
+    type: Literal["ok"] = "ok"
 
     def to_dict(self):
         return {"type": self.type, "msg": self.msg}
@@ -62,8 +62,8 @@ class Ok:
 
 @dataclass(frozen=True)
 class Kick:
-    type: Literal["kick"] = "kick"
     msg: str = ""
+    type: Literal["kick"] = "kick"
 
     def to_dict(self):
         return {"type": self.type, "msg": self.msg}
