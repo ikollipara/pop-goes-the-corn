@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="card bg-white rounded-lg shadow-lg w-80 h-130">
+    <!-- Card Header -->
+    <div class="card-header bg-gray-800 text-white text-center py-2 h-12">
+        <h2 class="text-xl font-bold truncate">{{ card.name }}</h2>
+    </div>
+    
+    <!-- Card Image -->
+    <div class="card-image text-center p-4 h-90">
+        <img src="{% static 'card.image' %}" alt="{{ card.name }}" class="w-full h-full object-cover rounded-md">
+    </div>
+    
+    <!-- Card Description -->
+    <div class="card-description p-4 flex-grow">
+        <p class="text-gray-700 text-base overflow-auto">{{ card.description }}</p>
+    </div>
+</div>
+
+
+<!--
+Example Code that has been tested for a particular card, above code may not work for the general card
+
+<div class="card bg-white rounded-lg shadow-lg w-80 h-130">
+    <div class="card-header bg-gray-800 text-white text-center py-2 h-12">
+        <h2 class="text-xl font-bold truncate">Pass the Kernel</h2>
+    </div>
+     
+    <div class="card-image text-center p-4 h-90">
+        <img src="{% static 'skip.jpg' %}" alt="Pass the Kernel" class="w-full h-full object-cover rounded-md">
+    </div>
+    
+    <div class="card-description p-4 flex-grow">
+        <p class="text-gray-700 text-base overflow-auto">Ends your turn without you having to click the kernel.</p>
+    </div>
+</div>
+-->
