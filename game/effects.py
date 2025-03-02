@@ -15,7 +15,7 @@ import random
 
 
 def skip(game: Game) -> str:
-    # ~50 rarity, medium rarity
+    # ~40 rarity, medium rarity
     # Pass the kernel
 
     player = game.players.filter(is_active=True, killed_at__isnull=True).get()
@@ -32,7 +32,7 @@ def skip(game: Game) -> str:
 
 
 def lucky_turn(game: Game) -> str:
-    # ~50 rarity, medium rarity
+    # ~70 rarity, medium rarity
     # Pinch of lucky salt
 
     # Increases rarity of all cards 
@@ -55,7 +55,7 @@ def super_lucky_turn(game: Game) -> str:
 
 
 def burnt_rough_estimator(game:Game) -> str:
-    # ~ 80 
+    # ~ 70 
     # 
 
 
@@ -84,7 +84,7 @@ def burnt_good_estimator(game:Game) -> str:
 
 
 def burnt_tracker(game: Game) -> str:
-    # ~5~10 very high rarity
+    # ~5 very high rarity
     
     # Tells you how many cards till the next pop
     # Could maybe add it to persist till a shuffle or till that pop
@@ -93,7 +93,7 @@ def burnt_tracker(game: Game) -> str:
 
 
 def shuffle(game: Game) -> str:
-    # ~20
+    # ~80
     # shake the kernels
     
     # set the numbers of pops from the number of active players - 1 till the amount of cards left in the deck
