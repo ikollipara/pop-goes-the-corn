@@ -107,6 +107,11 @@ class GameState {
           } else {
             this.stopSync();
           }
+          if (this.#gameData.active_player !== this.#player) {
+            document.getElementById("end-turn").hidden = true;
+          } else {
+            document.getElementById("end-turn").hidden = false;
+          }
           break;
 
         case "kill":
@@ -114,7 +119,7 @@ class GameState {
           this.#gameData = data.game;
           alert(data.msg);
           if (this.#player === active_player) this.#websocket.close();
-          history.back();
+          location.replace("/games/");
           break;
 
         case "play_card":
@@ -128,7 +133,7 @@ class GameState {
         case "win":
           alert(data.msg);
           this.#websocket.close();
-          history.back();
+          location.replace("/games/");
           break;
 
         default:
