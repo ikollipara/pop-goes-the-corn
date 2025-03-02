@@ -1,14 +1,20 @@
-{% extends "base.html" %}
-
+{% extends "header.html" %}
 
 {% block content %}
 {% load static %}
-<main class="w-screen px-5 py-3">
-    <h1 class="text-3xl text-red-700">Create a Game</h1>
-    <form class="flex flex-col mt-10" method="post">
-    {% csrf_token %}
-    {{form}}
-    <button class="bg-red-700 text-gray-100 rounded px-2 py-3 mt-5 w-full hover:cursor-pointer hover:bg-red-800 transition-colors" type="submit">Create Game</button>
+<main class="h-screen w-screen flex flex-col items-center pt-10">
+    <h1 class="text-9xl text-emerald-700">Create a Game</h1>
+    <form class="flex flex-col mt-10 w-80" method="post">
+        {% csrf_token %}
+        
+        <label for="{{ form.deck_size.id_for_label }}" class="text-gray-300 text-lg font-semibold mb-2">
+            Deck Size:
+        </label>
+        {{ form.deck_size }}
+        
+        <button class="bg-emerald-700 text-gray-100 rounded px-2 py-3 mt-5 w-full hover:cursor-pointer hover:bg-emerald-800 transition-colors" type="submit">
+            Create Game
+        </button>
     </form>
 </main>
 {% endblock content %}
