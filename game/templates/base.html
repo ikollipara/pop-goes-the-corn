@@ -4,11 +4,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="{% static 'app.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script type="module" src="{% static 'src/app.js' %}"></script>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Don't burn the popcorn!</title>
   </head>
   <body class="w-screen">
+    <canvas id="starfield"></canvas>
     {% block content %}{% endblock content %}
+    <script src="{% static 'src/starfield.js' %}"></script>
   </body>
 </html>
