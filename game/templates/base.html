@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script type="module" src="{% static 'src/app.js' %}"></script>
+    <script type="module" src="{% static 'app.js' %}"></script>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Don't burn the popcorn!</title>
   </head>
@@ -13,6 +13,5 @@
     <canvas id="starfield"></canvas>
     {% block header %}{% endblock header %}
     {% block content %}{% endblock content %}
-    <script src="{% static 'src/starfield.js' %}"></script>
   </body>
 </html>
